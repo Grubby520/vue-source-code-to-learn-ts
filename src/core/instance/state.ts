@@ -91,9 +91,9 @@ function initProps(vm: Component, propsOptions: Object) {
         if (!isRoot && !isUpdatingChildComponent) {
           warn(
             `Avoid mutating a prop directly since the value will be ` +
-              `overwritten whenever the parent component re-renders. ` +
-              `Instead, use a data or computed property based on the prop's ` +
-              `value. Prop being mutated: "${key}"`,
+            `overwritten whenever the parent component re-renders. ` +
+            `Instead, use a data or computed property based on the prop's ` +
+            `value. Prop being mutated: "${key}"`,
             vm
           )
         }
@@ -119,7 +119,7 @@ function initData(vm: Component) {
     process.env.NODE_ENV !== 'production' &&
       warn(
         'data functions should return an object:\n' +
-          'https://vuejs.org/v2/guide/components.html#data-Must-Be-a-Function',
+        'https://vuejs.org/v2/guide/components.html#data-Must-Be-a-Function',
         vm
       )
   }
@@ -139,7 +139,7 @@ function initData(vm: Component) {
       process.env.NODE_ENV !== 'production' &&
         warn(
           `The data property "${key}" is already declared as a prop. ` +
-            `Use prop default value instead.`,
+          `Use prop default value instead.`,
           vm
         )
     } else if (!isReserved(key)) {
@@ -264,9 +264,9 @@ function initMethods(vm: Component, methods: Object) {
       if (typeof methods[key] !== 'function') {
         warn(
           `Method "${key}" has type "${typeof methods[
-            key
+          key
           ]}" in the component definition. ` +
-            `Did you reference the function correctly?`,
+          `Did you reference the function correctly?`,
           vm
         )
       }
@@ -276,7 +276,7 @@ function initMethods(vm: Component, methods: Object) {
       if (key in vm && isReserved(key)) {
         warn(
           `Method "${key}" conflicts with an existing Vue instance method. ` +
-            `Avoid defining component methods that start with _ or $.`
+          `Avoid defining component methods that start with _ or $.`
         )
       }
     }
@@ -317,7 +317,7 @@ export function stateMixin(Vue: Component) {
   // flow somehow has problems with directly declared definition object
   // when using Object.defineProperty, so we have to procedurally build up
   // the object here.
-  const dataDef:any = {}
+  const dataDef: any = {}
   dataDef.get = function () {
     return this._data
   }
@@ -329,7 +329,7 @@ export function stateMixin(Vue: Component) {
     dataDef.set = function () {
       warn(
         'Avoid replacing instance root $data. ' +
-          'Use nested data properties instead.',
+        'Use nested data properties instead.',
         this
       )
     }
@@ -337,16 +337,22 @@ export function stateMixin(Vue: Component) {
       warn(`$props is readonly.`, this)
     }
   }
+
+  console.log('--添加 Vue.prototype.$data');
   Object.defineProperty(Vue.prototype, '$data', dataDef)
+  console.log('--添加 Vue.prototype.$props');
   Object.defineProperty(Vue.prototype, '$props', propsDef)
 
+  console.log('--添加 Vue.prototype.$set');
   Vue.prototype.$set = set
+  console.log('--添加 Vue.prototype.$delete');
   Vue.prototype.$delete = del
 
+  console.log('--添加 Vue.prototype.$watch');
   Vue.prototype.$watch = function (
     expOrFn: string | Function,
     cb: any,
-    options?: Record<string,any>
+    options?: Record<string, any>
   ): Function {
     const vm: Component = this
     if (isPlainObject(cb)) {

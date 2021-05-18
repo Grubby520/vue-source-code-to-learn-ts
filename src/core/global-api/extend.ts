@@ -17,6 +17,7 @@ export function initExtend(Vue: GlobalAPI) {
   /**
    * Class inheritance
    */
+  console.log('--添加 Vue.extend');
   Vue.extend = function (extendOptions: any): Component {
     extendOptions = extendOptions || {}
     const Super = this

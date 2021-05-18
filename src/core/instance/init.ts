@@ -14,6 +14,7 @@ import type { InternalComponentOptions } from 'typescript/options'
 let uid = 0
 
 export function initMixin(Vue: Component) {
+  console.log('--添加 Vue.prototype._init');
   Vue.prototype._init = function (options?: Record<string, any>) {
     const vm: Component = this
     // a uid

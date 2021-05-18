@@ -8,6 +8,7 @@ export function initAssetRegisters(Vue: GlobalAPI) {
    * Create asset registration methods.
    */
   ASSET_TYPES.forEach((type) => {
+    console.log('--添加资产注册机 Vue.component, .directive, .filter');
     // @ts-expect-error function is not exact same type
     Vue[type] = function (
       id: string,

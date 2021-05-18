@@ -21,7 +21,7 @@ export function initRender(vm: Component) {
   vm._staticTrees = null // v-once cached trees
   const options = vm.$options
   const parentVnode = (vm.$vnode = options._parentVnode!) // the placeholder node in parent tree
-  const renderContext  = parentVnode && parentVnode.context as Component
+  const renderContext = parentVnode && parentVnode.context as Component
   vm.$slots = resolveSlots(options._renderChildren, renderContext)
   vm.$scopedSlots = emptyObject
   // bind the createElement fn to this instance
@@ -86,12 +86,15 @@ export function setCurrentRenderingInstance(vm: Component) {
 
 export function renderMixin(Vue: Component) {
   // install runtime convenience helpers
+  console.log('--添加 17个render相关的渲染函数  Vue.prototype._o, _n, _s, _l, _t, _q, _i, _m, _f, _k, _b, _v, _e, _u, _g, _d, _p');
   installRenderHelpers(Vue.prototype)
 
+  console.log('--添加 Vue.prototype.$nextTick');
   Vue.prototype.$nextTick = function (fn: Function) {
     return nextTick(fn, this)
   }
 
+  console.log('--添加 Vue.prototype._render');
   Vue.prototype._render = function (): VNode {
     const vm: Component = this
     const { render, _parentVnode } = vm.$options
@@ -146,7 +149,7 @@ export function renderMixin(Vue: Component) {
       if (process.env.NODE_ENV !== 'production' && Array.isArray(vnode)) {
         warn(
           'Multiple root nodes returned from render function. Render function ' +
-            'should return a single root node.',
+          'should return a single root node.',
           vm
         )
       }

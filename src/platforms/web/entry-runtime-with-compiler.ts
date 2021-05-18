@@ -2,7 +2,9 @@ import config from 'core/config'
 import { warn, cached } from 'core/util/index'
 import { mark, measure } from 'core/util/perf'
 
+// Vue Level 1
 import Vue from './runtime/index'
+
 import { query } from './util/index'
 import { compileToFunctions } from './compiler/index'
 import {
@@ -18,6 +20,7 @@ const idToTemplate = cached((id) => {
 })
 
 const mount = Vue.prototype.$mount
+console.log('根据不同平台（Web | Weex）, 重写 Vue.prototype.$mount')
 Vue.prototype.$mount = function (
   el?: string | Element,
   hydrating?: boolean
@@ -105,6 +108,7 @@ function getOuterHTML(el: Element): string {
   }
 }
 
+console.log('--添加 Vue.compile')
 Vue.compile = compileToFunctions
-
+console.log('--初始化 Vue 构造函数 结束 ------------------------------------------------')
 export default Vue as GlobalAPI

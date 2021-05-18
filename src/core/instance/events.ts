@@ -58,6 +58,8 @@ export function updateComponentListeners(
 
 export function eventsMixin(Vue: Component) {
   const hookRE = /^hook:/
+
+  console.log('--添加 Vue.prototype.$on');
   Vue.prototype.$on = function (
     event: string | Array<string>,
     fn: Function
@@ -78,6 +80,7 @@ export function eventsMixin(Vue: Component) {
     return vm
   }
 
+  console.log('--添加 Vue.prototype.$once');
   Vue.prototype.$once = function (event: string, fn: Function): Component {
     const vm: Component = this
     function on() {
@@ -89,6 +92,7 @@ export function eventsMixin(Vue: Component) {
     return vm
   }
 
+  console.log('--添加 Vue.prototype.$off');
   Vue.prototype.$off = function (
     event?: string | Array<string>,
     fn?: Function
@@ -128,6 +132,7 @@ export function eventsMixin(Vue: Component) {
     return vm
   }
 
+  console.log('--添加 Vue.prototype.$emit');
   Vue.prototype.$emit = function (event: string): Component {
     const vm: Component = this
     if (process.env.NODE_ENV !== 'production') {
@@ -135,14 +140,14 @@ export function eventsMixin(Vue: Component) {
       if (lowerCaseEvent !== event && vm._events[lowerCaseEvent]) {
         tip(
           `Event "${lowerCaseEvent}" is emitted in component ` +
-            `${formatComponentName(
-              vm
-            )} but the handler is registered for "${event}". ` +
-            `Note that HTML attributes are case-insensitive and you cannot use ` +
-            `v-on to listen to camelCase events when using in-DOM templates. ` +
-            `You should probably use "${hyphenate(
-              event
-            )}" instead of "${event}".`
+          `${formatComponentName(
+            vm
+          )} but the handler is registered for "${event}". ` +
+          `Note that HTML attributes are case-insensitive and you cannot use ` +
+          `v-on to listen to camelCase events when using in-DOM templates. ` +
+          `You should probably use "${hyphenate(
+            event
+          )}" instead of "${event}".`
         )
       }
     }

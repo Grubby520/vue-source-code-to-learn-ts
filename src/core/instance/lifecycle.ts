@@ -56,6 +56,7 @@ export function initLifecycle(vm: Component) {
 }
 
 export function lifecycleMixin(Vue: Component) {
+  console.log('--添加 Vue.prototype._update');
   Vue.prototype._update = function (vnode: VNode, hydrating?: boolean) {
     const vm: Component = this;
     const prevEl = vm.$el;
@@ -87,6 +88,7 @@ export function lifecycleMixin(Vue: Component) {
     // updated in a parent's updated hook.
   };
 
+  console.log('--添加 Vue.prototype.$forceUpdate');
   Vue.prototype.$forceUpdate = function () {
     const vm: Component = this;
     if (vm._watcher) {
@@ -94,6 +96,7 @@ export function lifecycleMixin(Vue: Component) {
     }
   };
 
+  console.log('--添加 Vue.prototype.$destroy');
   Vue.prototype.$destroy = function () {
     const vm: Component = this;
     if (vm._isBeingDestroyed) {
@@ -157,8 +160,8 @@ export function mountComponent(
       ) {
         warn(
           "You are using the runtime-only build of Vue where the template " +
-            "compiler is not available. Either pre-compile the templates into " +
-            "render functions, or use the compiler-included build.",
+          "compiler is not available. Either pre-compile the templates into " +
+          "render functions, or use the compiler-included build.",
           vm
         );
       } else {

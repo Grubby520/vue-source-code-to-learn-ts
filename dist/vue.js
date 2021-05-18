@@ -454,11 +454,7 @@
   var hasProto = '__proto__' in {};
   // Browser environment sniffing
   var inBrowser = typeof window !== 'undefined';
-  // @ts-ignore
-  var inWeex = 
-  // @ts-ignore
-  typeof WXEnvironment !== 'undefined' && !!WXEnvironment.platform;
-  // @ts-ignore
+  var inWeex = typeof WXEnvironment !== 'undefined' && !!WXEnvironment.platform;
   var weexPlatform = inWeex && WXEnvironment.platform.toLowerCase();
   var UA = inBrowser && window.navigator.userAgent.toLowerCase();
   var isIE = UA && /msie|trident/.test(UA);
@@ -470,7 +466,7 @@
   UA && /phantomjs/.test(UA);
   var isFF = UA && UA.match(/firefox\/(\d+)/);
   // Firefox has a "watch" function on Object.prototype...
-  // @ts-ignore
+  // @ts-expect-error firebox support
   var nativeWatch = {}.watch;
   var supportsPassive = false;
   if (inBrowser) {
@@ -482,7 +478,6 @@
                   supportsPassive = true;
               },
           }); // https://github.com/facebook/flow/issues/285
-          // @ts-ignore
           window.addEventListener('test-passive', null, opts);
       }
       catch (e) { }
@@ -506,7 +501,6 @@
       return _isServer;
   };
   // detect devtools
-  // @ts-ignore TODO decalre this types
   var devtools = inBrowser && window.__VUE_DEVTOOLS_GLOBAL_HOOK__;
   /* istanbul ignore next */
   function isNative(Ctor) {
@@ -567,14 +561,10 @@
           if (vm.$root === vm) {
               return '<Root>';
           }
-          var options = 
-          // @ts-ignore
-          typeof vm === 'function' && vm.cid != null
-              ? // @ts-ignore
-                  vm.options
+          var options = typeof vm === 'function' && vm.cid != null
+              ? vm.options
               : vm._isVue
-                  ? // @ts-ignore
-                      vm.$options || vm.constructor.options
+                  ? vm.$options || vm.constructor.options
                   : vm;
           var name = options.name || options._componentTag;
           var file = options.__file;
@@ -597,7 +587,6 @@
           return res;
       };
       generateComponentTrace = function (vm) {
-          // @ts-ignore
           if (vm._isVue && vm.$parent) {
               var tree = [];
               var currentRecursiveSequence = 0;
@@ -712,7 +701,7 @@
 
   Object.defineProperties( VNode.prototype, prototypeAccessors );
   var createEmptyVNode = function (text) {
-      if ( text === void 0 ) text = '';
+      if ( text === void 0 ) text = "";
 
       var node = new VNode();
       node.text = text;
@@ -727,9 +716,7 @@
   // multiple renders, cloning them avoids errors when DOM manipulations rely
   // on their elm reference.
   function cloneVNode(vnode) {
-      var cloned = new VNode(
-      //@ts-expect-error void type not valid here
-      vnode.tag, vnode.data, 
+      var cloned = new VNode(vnode.tag, vnode.data, 
       // #7975
       // clone children array to avoid mutating original in case of cloning
       // a child.
@@ -963,7 +950,6 @@
           return val;
       }
       var ob = target.__ob__;
-      // @ts-ignore
       if (target._isVue || (ob && ob.vmCount)) {
           warn$2('Avoid adding reactive properties to a Vue instance or its root $data ' +
                   'at runtime - declare it upfront in the data option.');
@@ -989,7 +975,6 @@
           return;
       }
       var ob = target.__ob__;
-      //@ts-ignore
       if (target._isVue || (ob && ob.vmCount)) {
           warn$2('Avoid deleting properties on a Vue instance or its root $data ' +
                   '- just set it to null.');
@@ -1082,11 +1067,7 @@
           // check if parentVal is a function here because
           // it has to be a function to pass previous merges.
           return function mergedDataFn() {
-              return mergeData(
-              // @ts-ignore
-              typeof childVal === 'function' ? childVal.call(this, this) : childVal, 
-              // @ts-ignore
-              typeof parentVal === 'function' ? parentVal.call(this, this) : parentVal);
+              return mergeData(typeof childVal === 'function' ? childVal.call(this, this) : childVal, typeof parentVal === 'function' ? parentVal.call(this, this) : parentVal);
           };
       }
       else {
@@ -1473,7 +1454,6 @@
           return;
       }
       var type = prop.type;
-      // @ts-ignore
       var valid = !type || type === true;
       var expectedTypes = [];
       if (type) {
@@ -2024,7 +2004,7 @@
                   if (key !== keyInLowerCase && attrs && hasOwn(attrs, keyInLowerCase)) {
                       tip("Prop \"" + keyInLowerCase + "\" is passed to component " +
                           (formatComponentName(
-                          // @ts-ignore
+                          // @ts-expect-error tag is string
                           tag || Ctor)) + ", but the declared prop name is" +
                           " \"" + key + "\". " +
                           "Note that HTML attributes are case-insensitive and camelCased " +
@@ -2200,7 +2180,6 @@
                               : provideDefault;
                   }
                   else {
-                      // @ts-ignore
                       warn$2(("Injection \"" + key + "\" not found"), vm);
                   }
               }
@@ -2583,6 +2562,7 @@
   }
 
   function installRenderHelpers(target) {
+      // console.log('--添加 17个render相关的渲染函数  Vue.prototype._o, _n, _s, _l, _t, _q, _i, _m, _f, _k, _b, _v, _e, _u, _g, _d, _p');
       target._o = markOnce;
       target._n = toNumber;
       target._s = toString;
@@ -3065,10 +3045,13 @@
   var currentRenderingInstance = null;
   function renderMixin(Vue) {
       // install runtime convenience helpers
+      console.log('--添加 17个render相关的渲染函数  Vue.prototype._o, _n, _s, _l, _t, _q, _i, _m, _f, _k, _b, _v, _e, _u, _g, _d, _p');
       installRenderHelpers(Vue.prototype);
+      console.log('--添加 Vue.prototype.$nextTick');
       Vue.prototype.$nextTick = function (fn) {
           return nextTick(fn, this);
       };
+      console.log('--添加 Vue.prototype._render');
       Vue.prototype._render = function () {
           var vm = this;
           var ref = vm.$options;
@@ -3292,6 +3275,7 @@
   }
   function eventsMixin(Vue) {
       var hookRE = /^hook:/;
+      console.log('--添加 Vue.prototype.$on');
       Vue.prototype.$on = function (event, fn) {
           var vm = this;
           if (Array.isArray(event)) {
@@ -3309,6 +3293,7 @@
           }
           return vm;
       };
+      console.log('--添加 Vue.prototype.$once');
       Vue.prototype.$once = function (event, fn) {
           var vm = this;
           function on() {
@@ -3319,6 +3304,7 @@
           vm.$on(event, on);
           return vm;
       };
+      console.log('--添加 Vue.prototype.$off');
       Vue.prototype.$off = function (event, fn) {
           var vm = this;
           // all
@@ -3354,6 +3340,7 @@
           }
           return vm;
       };
+      console.log('--添加 Vue.prototype.$emit');
       Vue.prototype.$emit = function (event) {
           var vm = this;
           {
@@ -3402,7 +3389,6 @@
       vm.$root = parent ? parent.$root : vm;
       vm.$children = [];
       vm.$refs = {};
-      // @ts-ignore
       vm._watcher = null;
       vm._inactive = null;
       vm._directInactive = false;
@@ -3411,6 +3397,7 @@
       vm._isBeingDestroyed = false;
   }
   function lifecycleMixin(Vue) {
+      console.log('--添加 Vue.prototype._update');
       Vue.prototype._update = function (vnode, hydrating) {
           var vm = this;
           var prevEl = vm.$el;
@@ -3442,22 +3429,23 @@
           // updated hook is called by the scheduler to ensure that children are
           // updated in a parent's updated hook.
       };
+      console.log('--添加 Vue.prototype.$forceUpdate');
       Vue.prototype.$forceUpdate = function () {
           var vm = this;
           if (vm._watcher) {
               vm._watcher.update();
           }
       };
+      console.log('--添加 Vue.prototype.$destroy');
       Vue.prototype.$destroy = function () {
           var vm = this;
           if (vm._isBeingDestroyed) {
               return;
           }
-          callHook$1(vm, 'beforeDestroy');
+          callHook$1(vm, "beforeDestroy");
           vm._isBeingDestroyed = true;
           // remove self from parent
           var parent = vm.$parent;
-          // @ts-ignore
           if (parent && !parent._isBeingDestroyed && !vm.$options.abstract) {
               remove$2(parent.$children, vm);
           }
@@ -3479,7 +3467,7 @@
           // invoke destroy hooks on current rendered tree
           vm.__patch__(vm._vnode, null);
           // fire destroyed hook
-          callHook$1(vm, 'destroyed');
+          callHook$1(vm, "destroyed");
           // turn off all instance listeners.
           vm.$off();
           // remove __vue__ reference
@@ -3500,19 +3488,19 @@
           vm.$options.render = createEmptyVNode;
           {
               /* istanbul ignore if */
-              if ((vm.$options.template && vm.$options.template.charAt(0) !== '#') ||
+              if ((vm.$options.template && vm.$options.template.charAt(0) !== "#") ||
                   vm.$options.el ||
                   el) {
-                  warn$2('You are using the runtime-only build of Vue where the template ' +
-                      'compiler is not available. Either pre-compile the templates into ' +
-                      'render functions, or use the compiler-included build.', vm);
+                  warn$2("You are using the runtime-only build of Vue where the template " +
+                      "compiler is not available. Either pre-compile the templates into " +
+                      "render functions, or use the compiler-included build.", vm);
               }
               else {
-                  warn$2('Failed to mount component: template or render function not defined.', vm);
+                  warn$2("Failed to mount component: template or render function not defined.", vm);
               }
           }
       }
-      callHook$1(vm, 'beforeMount');
+      callHook$1(vm, "beforeMount");
       var updateComponent;
       /* istanbul ignore if */
       if (config.performance && mark) {
@@ -3542,7 +3530,7 @@
       new Watcher(vm, updateComponent, noop, {
           before: function before() {
               if (vm._isMounted && !vm._isDestroyed) {
-                  callHook$1(vm, 'beforeUpdate');
+                  callHook$1(vm, "beforeUpdate");
               }
           },
       }, true /* isRenderWatcher */);
@@ -3551,7 +3539,7 @@
       // mounted is called for render-created child components in its inserted hook
       if (vm.$vnode == null) {
           vm._isMounted = true;
-          callHook$1(vm, 'mounted');
+          callHook$1(vm, "mounted");
       }
       return vm;
   }
@@ -3575,13 +3563,10 @@
       var needsForceUpdate = !!(renderChildren || // has new static slots
           vm.$options._renderChildren || // has old static slots
           hasDynamicScopedSlot);
-      // @ts-ignore
       vm.$options._parentVnode = parentVnode;
-      // @ts-ignore
       vm.$vnode = parentVnode; // update vm's placeholder node without re-render
       if (vm._vnode) {
           // update child tree's parent
-          // @ts-ignore
           vm._vnode.parent = parentVnode;
       }
       vm.$options._renderChildren = renderChildren;
@@ -3589,7 +3574,6 @@
       // these are also reactive so they may trigger child update if the child
       // used them during render
       vm.$attrs = parentVnode.data.attrs || emptyObject;
-      // @ts-ignore
       vm.$listeners = listeners || emptyObject;
       // update props
       if (propsData && vm.$options.props) {
@@ -3641,7 +3625,7 @@
           for (var i = 0; i < vm.$children.length; i++) {
               activateChildComponent(vm.$children[i]);
           }
-          callHook$1(vm, 'activated');
+          callHook$1(vm, "activated");
       }
   }
   function deactivateChildComponent(vm, direct) {
@@ -3656,7 +3640,7 @@
           for (var i = 0; i < vm.$children.length; i++) {
               deactivateChildComponent(vm.$children[i]);
           }
-          callHook$1(vm, 'deactivated');
+          callHook$1(vm, "deactivated");
       }
   }
   function callHook$1(vm, hook) {
@@ -3670,7 +3654,7 @@
           }
       }
       if (vm._hasHookEvent) {
-          vm.$emit('hook:' + hook);
+          vm.$emit("hook:" + hook);
       }
       popTarget();
   }
@@ -4279,10 +4263,15 @@
               warn$2("$props is readonly.", this);
           };
       }
+      console.log('--添加 Vue.prototype.$data');
       Object.defineProperty(Vue.prototype, '$data', dataDef);
+      console.log('--添加 Vue.prototype.$props');
       Object.defineProperty(Vue.prototype, '$props', propsDef);
+      console.log('--添加 Vue.prototype.$set');
       Vue.prototype.$set = set;
+      console.log('--添加 Vue.prototype.$delete');
       Vue.prototype.$delete = del;
+      console.log('--添加 Vue.prototype.$watch');
       Vue.prototype.$watch = function (expOrFn, cb, options) {
           var vm = this;
           if (isPlainObject(cb)) {
@@ -4309,6 +4298,7 @@
 
   var uid = 0;
   function initMixin$1(Vue) {
+      console.log('--添加 Vue.prototype._init');
       Vue.prototype._init = function (options) {
           var vm = this;
           // a uid
@@ -4358,7 +4348,6 @@
       };
   }
   function initInternalComponent(vm, options) {
-      // @ts-ignore
       var opts = (vm.$options = Object.create(vm.constructor.options));
       // doing this because it's faster than dynamic enumeration.
       var parentVnode = options._parentVnode;
@@ -4411,24 +4400,34 @@
       return modified;
   }
 
+  // Vue Level 4
+  console.log('Vue Level 4');
+  console.log('--初始化 Vue 构造函数 开始 ------------------------------------------------');
+  console.log('声明 Vue 构造函数');
   function Vue(options) {
       if (!(this instanceof Vue)) {
-          warn$2('Vue is a constructor and should be called with the `new` keyword');
+          warn$2("Vue is a constructor and should be called with the `new` keyword");
       }
       this._init(options);
   }
-  //@ts-ignore
+  console.log('初始化 initMixin');
+  //@ts-expect-error Vue has function type
   initMixin$1(Vue);
-  //@ts-ignore
+  console.log('初始化 stateMixin');
+  //@ts-expect-error Vue has function type
   stateMixin(Vue);
-  //@ts-ignore
+  console.log('初始化 eventsMixin');
+  //@ts-expect-error Vue has function type
   eventsMixin(Vue);
-  //@ts-ignore
+  console.log('初始化 lifecycleMixin');
+  //@ts-expect-error Vue has function type
   lifecycleMixin(Vue);
-  //@ts-ignore
+  console.log('初始化 renderMixin');
+  //@ts-expect-error Vue has function type
   renderMixin(Vue);
 
   function initUse(Vue) {
+      console.log('--添加 Vue.use');
       Vue.use = function (plugin) {
           var installedPlugins = this._installedPlugins || (this._installedPlugins = []);
           if (installedPlugins.indexOf(plugin) > -1) {
@@ -4449,6 +4448,7 @@
   }
 
   function initMixin(Vue) {
+      console.log('--添加 Vue.mixin');
       Vue.mixin = function (mixin) {
           this.options = mergeOptions(this.options, mixin);
           return this;
@@ -4466,6 +4466,7 @@
       /**
        * Class inheritance
        */
+      console.log('--添加 Vue.extend');
       Vue.extend = function (extendOptions) {
           extendOptions = extendOptions || {};
           var Super = this;
@@ -4537,6 +4538,7 @@
        * Create asset registration methods.
        */
       ASSET_TYPES.forEach(function (type) {
+          console.log('--添加资产注册机 Vue.component, .directive, .filter');
           // @ts-expect-error function is not exact same type
           Vue[type] = function (id, definition) {
               if (!definition) {
@@ -4689,31 +4691,40 @@
               warn$2('Do not replace the Vue.config object, set individual fields instead.');
           };
       }
+      console.log('--添加 Vue.config');
       Object.defineProperty(Vue, 'config', configDef);
       // exposed util methods.
       // NOTE: these are not considered part of the public API - avoid relying on
       // them unless you are aware of the risk.
+      console.log('--添加 Vue.util');
       Vue.util = {
           warn: warn$2,
           extend: extend,
           mergeOptions: mergeOptions,
           defineReactive: defineReactive,
       };
+      console.log('--添加 Vue.set');
       Vue.set = set;
+      console.log('--添加 Vue.delete');
       Vue.delete = del;
+      console.log('--添加 Vue.nextTick');
       Vue.nextTick = nextTick;
       // 2.6 explicit observable API
+      console.log('--添加 Vue.observable');
       Vue.observable = function (obj) {
           observe(obj);
           return obj;
       };
+      console.log('--添加 Vue.options: .components, .directives, .filters');
       Vue.options = Object.create(null);
       ASSET_TYPES.forEach(function (type) {
           Vue.options[type + 's'] = Object.create(null);
       });
       // this is used to identify the "base" constructor to extend all plain-object
       // components with in Weex's multi-instance scenarios.
+      console.log('--添加 Vue.options: .base');
       Vue.options._base = Vue;
+      console.log('--添加 内置组件 KeepAlive');
       extend(Vue.options.components, builtInComponents);
       initUse(Vue);
       initMixin(Vue);
@@ -4721,10 +4732,16 @@
       initAssetRegisters(Vue);
   }
 
+  // Vue Level 3
+  console.log('Vue Level 3');
+  console.log('初始化全局API');
   initGlobalAPI(Vue);
+  console.log('初始化全局API 结束');
+  console.log('--添加 Vue.prototype.$isServer');
   Object.defineProperty(Vue.prototype, '$isServer', {
       get: isServerRendering,
   });
+  console.log('--添加 Vue.prototype.$ssrContext');
   Object.defineProperty(Vue.prototype, '$ssrContext', {
       get: function get() {
           /* istanbul ignore next */
@@ -4732,9 +4749,11 @@
       },
   });
   // expose FunctionalRenderContext for ssr runtime helper installation
+  console.log('--添加 Vue.FunctionalRenderContext');
   Object.defineProperty(Vue, 'FunctionalRenderContext', {
       value: FunctionalRenderContext,
   });
+  // 这个字符串最后怎么被替换掉的？
   Vue.version = '2.6.12';
 
   // these are reserved for web because they are directly compiled away
@@ -5006,25 +5025,22 @@
       var vm = vnode.context;
       var ref = vnode.componentInstance || vnode.elm;
       var refs = vm.$refs;
+      var obj = refs[key];
       if (isRemoval) {
-          if (Array.isArray(refs[key])) {
-              // @ts-expect-error invalid typings
-              remove$2(refs[key], ref);
+          if (Array.isArray(obj)) {
+              remove$2(obj, ref);
           }
-          else if (refs[key] === ref) {
+          else if (obj === ref) {
               refs[key] = undefined;
           }
       }
       else {
-          // @ts-expect-error invalid typings
           if (vnode.data.refInFor) {
-              if (!Array.isArray(refs[key])) {
+              if (!Array.isArray(obj)) {
                   refs[key] = [ref];
-                  // @ts-expect-error invalid typings
               }
-              else if (refs[key].indexOf(ref) < 0) {
-                  // @ts-expect-error invalid typings
-                  refs[key].push(ref);
+              else if (obj.indexOf(ref) < 0) {
+                  obj.push(ref);
               }
           }
           else {
@@ -7647,7 +7663,6 @@
       tag: String,
       moveClass: String,
   }, transitionProps);
-  // @ts-ignore
   delete props.mode;
   var TransitionGroup = {
       props: props,
@@ -7667,7 +7682,7 @@
           };
       },
       render: function render(h) {
-          var tag = this.tag || this.$vnode.data.tag || 'span';
+          var tag = this.tag || this.$vnode.data.tag || "span";
           var map = Object.create(null);
           var prevChildren = (this.prevChildren = this.children);
           var rawChildren = this.$slots.default || [];
@@ -7676,7 +7691,7 @@
           for (var i = 0; i < rawChildren.length; i++) {
               var c = rawChildren[i];
               if (c.tag) {
-                  if (c.key != null && String(c.key).indexOf('__vlist') !== 0) {
+                  if (c.key != null && String(c.key).indexOf("__vlist") !== 0) {
                       children.push(c);
                       map[c.key] = c;
                       (c.data || (c.data = {})).transition = transitionData;
@@ -7684,7 +7699,7 @@
                   else {
                       var opts = c.componentOptions;
                       var name = opts
-                          ? opts.Ctor.options.name || opts.tag || ''
+                          ? opts.Ctor.options.name || opts.tag || ""
                           : c.tag;
                       warn$2(("<transition-group> children must be keyed: <" + name + ">"));
                   }
@@ -7696,9 +7711,8 @@
               for (var i$1 = 0; i$1 < prevChildren.length; i$1++) {
                   var c$1 = prevChildren[i$1];
                   c$1.data.transition = transitionData;
-                  // @ts-ignore
+                  // @ts-expect-error .getBoundingClientRect is not typed in Node
                   c$1.data.pos = c$1.elm.getBoundingClientRect();
-                  // @ts-ignore
                   if (map[c$1.key]) {
                       kept.push(c$1);
                   }
@@ -7713,7 +7727,7 @@
       },
       updated: function updated() {
           var children = this.prevChildren;
-          var moveClass = this.moveClass || (this.name || 'v') + '-move';
+          var moveClass = this.moveClass || (this.name || "v") + "-move";
           if (!children.length || !this.hasMove(children[0].elm, moveClass)) {
               return;
           }
@@ -7727,12 +7741,11 @@
           // $flow-disable-line
           this._reflow = document.body.offsetHeight;
           children.forEach(function (c) {
-              // @ts-ignore
               if (c.data.moved) {
                   var el = c.elm;
                   var s = el.style;
                   addTransitionClass(el, moveClass);
-                  s.transform = s.WebkitTransform = s.transitionDuration = '';
+                  s.transform = s.WebkitTransform = s.transitionDuration = "";
                   el.addEventListener(transitionEndEvent, (el._moveCb = function cb(e) {
                       if (e && e.target !== el) {
                           return;
@@ -7768,7 +7781,7 @@
                   });
               }
               addClass(clone, moveClass);
-              clone.style.display = 'none';
+              clone.style.display = "none";
               this.$el.appendChild(clone);
               var info = getTransitionInfo(clone);
               this.$el.removeChild(clone);
@@ -7778,36 +7791,27 @@
   };
   function callPendingCbs(c) {
       /* istanbul ignore if */
-      //@ts-ignore
       if (c.elm._moveCb) {
-          //@ts-ignore
           c.elm._moveCb();
       }
       /* istanbul ignore if */
-      //@ts-ignore
       if (c.elm._enterCb) {
-          //@ts-ignore
           c.elm._enterCb();
       }
   }
   function recordPosition(c) {
-      //@ts-ignore
       c.data.newPos = c.elm.getBoundingClientRect();
   }
   function applyTranslation(c) {
-      //@ts-ignore
       var oldPos = c.data.pos;
-      //@ts-ignore
       var newPos = c.data.newPos;
       var dx = oldPos.left - newPos.left;
       var dy = oldPos.top - newPos.top;
       if (dx || dy) {
-          //@ts-ignore
           c.data.moved = true;
-          //@ts-ignore
           var s = c.elm.style;
           s.transform = s.WebkitTransform = "translate(" + dx + "px," + dy + "px)";
-          s.transitionDuration = '0s';
+          s.transitionDuration = "0s";
       }
   }
 
@@ -7816,18 +7820,26 @@
       TransitionGroup: TransitionGroup,
   };
 
+  // Vue Level 2
+  console.log('Vue Level 2');
   // install platform specific utils
+  console.log('--添加平台特殊的utils方法 Vue.config.mustUseProp, .isReservedTag, .isReservedAttr, .getTagNamespace, .isUnknownElement');
   Vue.config.mustUseProp = mustUseProp$1;
   Vue.config.isReservedTag = isReservedTag$1;
   Vue.config.isReservedAttr = isReservedAttr;
   Vue.config.getTagNamespace = getTagNamespace$1;
   Vue.config.isUnknownElement = isUnknownElement;
   // install platform runtime directives & components
+  console.log('--添加平台运行时的指令和组件 Vue.options.directives, .components');
+  console.log('  directives: mode, show');
   extend(Vue.options.directives, platformDirectives);
+  console.log('  components: Transition, TransitionGroup');
   extend(Vue.options.components, platformComponents);
   // install platform patch function
+  console.log('--添加***** Vue.prototype.__patch');
   Vue.prototype.__patch__ = inBrowser ? patch : noop;
   // public mount method
+  console.log('--添加 Vue.prototype.$mount');
   Vue.prototype.$mount = function (el, hydrating) {
       el = el && inBrowser ? query$1(el) : undefined;
       return mountComponent(this, el, hydrating);
@@ -9385,7 +9397,6 @@
       canBeLeftOpenTag: canBeLeftOpenTag,
       isReservedTag: isReservedTag,
       getTagNamespace: getTagNamespace,
-      // @ts-ignore
       staticKeys: genStaticKeys$1(modules),
   };
 
@@ -10493,6 +10504,7 @@
       return el && el.innerHTML;
   });
   var mount = Vue.prototype.$mount;
+  console.log('根据不同平台（Web | Weex）, 重写 Vue.prototype.$mount');
   Vue.prototype.$mount = function (el, hydrating) {
       el = el && query(el);
       /* istanbul ignore if */
@@ -10567,7 +10579,9 @@
           return container.innerHTML;
       }
   }
+  console.log('--添加 Vue.compile');
   Vue.compile = compileToFunctions;
+  console.log('--初始化 Vue 构造函数 结束 ------------------------------------------------');
 
   return Vue;
 
